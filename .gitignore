@@ -14,3 +14,6 @@ wheels/
 reports/
 data/private/
 *.log
+
+# Local test files and potentially sensitive evidence
+examples/images/
