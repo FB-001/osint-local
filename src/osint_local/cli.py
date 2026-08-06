@@ -27,6 +27,13 @@ from osint_local.errors import (
     InvalidImageError,
 )
 from osint_local.errors.handlers import format_operator_error
+from osint_local.analyzers.username_search import search_username
+from osint_local.presenters.username_summary import (
+    format_username_results,
+)
+from osint_local.collectors.mastodon_username import (
+    search_mastodon_username,
+)
 
 app = typer.Typer(
     name="osint-local",
@@ -54,6 +61,14 @@ def format_main_help() -> str:
             "comparar-arquivos <arquivo_a> <arquivo_b>",
             "Compara dois arquivos utilizando SHA-256.",
         ),
+        format_command(
+            "procurar-usuario <username>",
+            "Pesquisa um identificador nas fontes públicas registradas.",
+        ),
+        format_command(
+            "procurar-mastodon <usuario@instancia>",
+            "Verifica uma conta Mastodon pelo identificador federado.",
+        ),
     ]
 
     examples = [
@@ -62,6 +77,8 @@ def format_main_help() -> str:
             "osint-local comparar-arquivos "
             "foto_original.jpg foto_analisada.jpg"
         ),
+        "osint-local procurar-usuario <username>",
+        "osint-local procurar-mastodon <username>@mastodon.social",
     ]
 
     lines = [
@@ -229,6 +246,57 @@ def compare_files_command(
             )
         )
         raise typer.Exit(code=1)
+
+@app.command("procurar-usuario")
+def search_username_command(
+    username: Annotated[
+        str,
+        typer.Argument(
+            metavar="USERNAME",
+        ),
+    ],
+) -> None:
+    """Pesquisa um username em múltiplas fontes públicas."""
+
+    normalized_username = username.strip()
+
+    if not normalized_username:
+        print(
+            format_operator_error(
+                "O nome de usuário não pode estar vazio.",
+                guidance="Informe um identificador válido e tente novamente.",
+            )
+        )
+        raise typer.Exit(code=1)
+
+    results = search_username(normalized_username)
+
+    print(
+        format_username_results(
+            normalized_username,
+            results,
+        )
+    )
+
+@app.command("procurar-mastodon")
+def search_mastodon_command(
+    handle: Annotated[
+        str,
+        typer.Argument(
+            metavar="USUARIO@INSTANCIA",
+        ),
+    ],
+) -> None:
+    """Verifica uma conta Mastodon pelo identificador federado."""
+
+    result = search_mastodon_username(handle)
+
+    print(
+        format_username_results(
+            result.username,
+            [result],
+        )
+    )
 
 
 def main() -> None:
