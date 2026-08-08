@@ -6,14 +6,10 @@ from typing import Annotated
 import typer
 
 from osint_local.analyzers.file_integrity import compare_files
-from osint_local.analyzers.username_search import search_username
 from osint_local.collectors.company.brasilapi import (
     search_company_by_cnpj,
 )
-from osint_local.collectors.image_metadata import analyze_image
-from osint_local.collectors.mastodon_username import (
-    search_mastodon_username,
-)
+from osint_local.collectors.image.metadata import analyze_image
 from osint_local.errors import (
     CompanyNetworkError,
     CompanyNotFoundError,
@@ -31,9 +27,6 @@ from osint_local.presenters.company_summary import (
 )
 from osint_local.presenters.hash_summary import format_hash_comparison
 from osint_local.presenters.photo_summary import format_photo_metadata
-from osint_local.presenters.username_summary import (
-    format_username_results,
-)
 from osint_local.ui.console import (
     format_field,
     format_footer,
@@ -77,14 +70,6 @@ def format_main_help() -> str:
             "Compara dois arquivos utilizando SHA-256.",
         ),
         format_command(
-            "procurar-usuario <username>",
-            "Pesquisa um identificador nas fontes públicas registradas.",
-        ),
-        format_command(
-            "procurar-mastodon <usuario@instancia>",
-            "Verifica uma conta Mastodon pelo identificador federado.",
-        ),
-        format_command(
             "consultar-cnpj <cnpj>",
             "Consulta informações públicas de uma empresa pelo CNPJ.",
         ),
@@ -96,9 +81,7 @@ def format_main_help() -> str:
             "osint-local comparar-arquivos "
             "foto_original.jpg foto_analisada.jpg"
         ),
-        "osint-local procurar-usuario FB-001",
-        "osint-local procurar-mastodon gargron@mastodon.social",
-        "osint-local consultar-cnpj 60701190000104",
+        "osint-local consultar-cnpj <cnpj>",
     ]
 
     lines = [
@@ -286,62 +269,6 @@ def compare_files_command(
             )
         )
         raise typer.Exit(code=1)
-
-
-@app.command("procurar-usuario")
-def search_username_command(
-    username: Annotated[
-        str,
-        typer.Argument(
-            metavar="USERNAME",
-        ),
-    ],
-) -> None:
-    """Pesquisa um username em múltiplas fontes públicas."""
-
-    normalized_username = username.strip()
-
-    if not normalized_username:
-        print(
-            format_operator_error(
-                "O nome de usuário não pode estar vazio.",
-                guidance=(
-                    "Informe um identificador válido e tente novamente."
-                ),
-            )
-        )
-        raise typer.Exit(code=1)
-
-    results = search_username(normalized_username)
-
-    print(
-        format_username_results(
-            normalized_username,
-            results,
-        )
-    )
-
-
-@app.command("procurar-mastodon")
-def search_mastodon_command(
-    handle: Annotated[
-        str,
-        typer.Argument(
-            metavar="USUARIO@INSTANCIA",
-        ),
-    ],
-) -> None:
-    """Verifica uma conta Mastodon pelo identificador federado."""
-
-    result = search_mastodon_username(handle)
-
-    print(
-        format_username_results(
-            result.username,
-            [result],
-        )
-    )
-
 
 @app.command("consultar-cnpj")
 def search_cnpj_command(

@@ -13,10 +13,12 @@ from osint_local.errors import (
 from osint_local.models.company_result import (
     CompanyPartner,
     CompanyResult,
+    CompanySecondaryActivity,
 )
 
-
-BRASIL_API_CNPJ_URL = "https://brasilapi.com.br/api/cnpj/v1/{cnpj}"
+BRASIL_API_CNPJ_URL = (
+    "https://brasilapi.com.br/api/cnpj/v1/{cnpj}"
+)
 
 REQUEST_HEADERS = {
     "Accept": "application/json",
@@ -80,7 +82,7 @@ def search_company_by_cnpj(cnpj: str) -> CompanyResult:
             "A fonte retornou uma resposta inválida."
         ) from error
 
-    partners = []
+    partners: list[CompanyPartner] = []
 
     for partner in data.get("qsa", []):
         partners.append(
@@ -94,6 +96,22 @@ def search_company_by_cnpj(cnpj: str) -> CompanyResult:
                 ),
                 document=partner.get(
                     "cnpj_cpf_do_socio",
+                ),
+            )
+        )
+
+    secondary_activities: list[CompanySecondaryActivity] = []
+
+    for activity in data.get("cnaes_secundarios", []):
+        secondary_activities.append(
+            CompanySecondaryActivity(
+                code=str(
+                    activity.get("codigo")
+                )
+                if activity.get("codigo") is not None
+                else None,
+                description=activity.get(
+                    "descricao",
                 ),
             )
         )
@@ -149,6 +167,28 @@ def search_company_by_cnpj(cnpj: str) -> CompanyResult:
         main_activity=data.get(
             "cnae_fiscal_descricao",
         ),
+        capital_social=data.get(
+            "capital_social",
+        ),
+        company_size=(
+            data.get("descricao_porte")
+            or data.get("porte")
+        ),
+        activity_start_date=data.get(
+            "data_inicio_atividade",
+        ),
+        phone_1=(
+            data.get("ddd_telefone_1")
+            or data.get("ddd_telefone1")
+        ),
+        phone_2=(
+            data.get("ddd_telefone_2")
+            or data.get("ddd_telefone2")
+        ),
+        email=data.get(
+            "email",
+        ),
+        secondary_activities=secondary_activities,
         source="BrasilAPI",
         source_url=url,
         partners=partners,

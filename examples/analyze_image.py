@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from osint_local.collectors.image_metadata import analyze_image
+from osint_local.collectors.image.metadata import analyze_image
 
 
 image_path = Path("examples/images/202608056.jpg")

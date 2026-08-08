@@ -2,7 +2,7 @@
 
 from pathlib import Path
 
-from osint_local.collectors.image_metadata import calculate_sha256
+from osint_local.collectors.image.metadata import calculate_sha256
 from osint_local.errors import (
     HashCalculationError,
     HashFileNotFoundError,

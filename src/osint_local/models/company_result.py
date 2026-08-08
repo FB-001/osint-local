@@ -15,6 +15,14 @@ class CompanyPartner:
 
 
 @dataclass(slots=True)
+class CompanySecondaryActivity:
+    """Representa uma atividade econômica secundária."""
+
+    code: Optional[str] = None
+    description: Optional[str] = None
+
+
+@dataclass(slots=True)
 class CompanyResult:
     """Representa o resultado de uma consulta pública de empresa."""
 
@@ -30,8 +38,20 @@ class CompanyResult:
     legal_nature: str | None
     main_activity: str | None
 
-    source: str
-    source_url: str
+    capital_social: float | None = None
+    company_size: str | None = None
+    activity_start_date: str | None = None
+
+    phone_1: str | None = None
+    phone_2: str | None = None
+    email: str | None = None
+
+    secondary_activities: list[CompanySecondaryActivity] = field(
+        default_factory=list
+    )
+
+    source: str = ""
+    source_url: str = ""
 
     partners: list[CompanyPartner] = field(default_factory=list)
 

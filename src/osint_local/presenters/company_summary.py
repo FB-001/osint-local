@@ -1,5 +1,7 @@
 """Apresentação dos resultados de consulta de empresa."""
 
+from datetime import datetime
+
 from osint_local.models.company_result import CompanyResult
 from osint_local.ui.console import (
     format_field,
@@ -31,6 +33,70 @@ def format_cnpj(cnpj: str) -> str:
     )
 
 
+def format_money(value: float | None) -> str:
+    """Formata um valor monetário em reais."""
+
+    if value is None:
+        return "Não informado"
+
+    formatted = f"{value:,.2f}"
+
+    formatted = (
+        formatted
+        .replace(",", "X")
+        .replace(".", ",")
+        .replace("X", ".")
+    )
+
+    return f"R$ {formatted}"
+
+
+def format_date(value: str | None) -> str:
+    """Formata uma data ISO para o padrão brasileiro."""
+
+    if not value:
+        return ""
+
+    try:
+        date = datetime.strptime(
+            value,
+            "%Y-%m-%d",
+        )
+    except ValueError:
+        return value
+
+    return date.strftime("%d/%m/%Y")
+
+
+def format_phone(value: str | None) -> str:
+    """Formata um telefone brasileiro."""
+
+    if not value:
+        return ""
+
+    digits = "".join(
+        character
+        for character in value
+        if character.isdigit()
+    )
+
+    if len(digits) == 10:
+        return (
+            f"({digits[:2]}) "
+            f"{digits[2:6]}-"
+            f"{digits[6:]}"
+        )
+
+    if len(digits) == 11:
+        return (
+            f"({digits[:2]}) "
+            f"{digits[2:7]}-"
+            f"{digits[7:]}"
+        )
+
+    return value
+
+
 def format_company_result(company: CompanyResult) -> str:
     """Retorna um relatório textual de consulta de empresa."""
 
@@ -57,12 +123,43 @@ def format_company_result(company: CompanyResult) -> str:
             )
         )
 
+    lines.append(
+        format_field(
+            "Situação",
+            company.status,
+        )
+    )
+
+    if company.company_size:
+        lines.append(
+            format_field(
+                "Porte",
+                company.company_size,
+            )
+        )
+
+    if company.activity_start_date:
+        lines.append(
+            format_field(
+                "Início da atividade",
+                format_date(
+                    company.activity_start_date
+                ),
+            )
+        )
+
+    if company.capital_social is not None:
+        lines.append(
+            format_field(
+                "Capital social",
+                format_money(
+                    company.capital_social
+                ),
+            )
+        )
+
     lines.extend(
         [
-            format_field(
-                "Situação",
-                company.status,
-            ),
             "",
             format_section("Dados cadastrais"),
             "",
@@ -109,6 +206,67 @@ def format_company_result(company: CompanyResult) -> str:
                 " / ".join(location_parts),
             )
         )
+
+    if company.phone_1 or company.phone_2 or company.email:
+        lines.extend(
+            [
+                "",
+                format_section("Contato"),
+                "",
+            ]
+        )
+
+        if company.phone_1:
+            lines.append(
+                format_field(
+                    "Telefone 1",
+                    format_phone(
+                        company.phone_1
+                    ),
+                )
+            )
+
+        if company.phone_2:
+            lines.append(
+                format_field(
+                    "Telefone 2",
+                    format_phone(
+                        company.phone_2
+                    ),
+                )
+            )
+
+        if company.email:
+            lines.append(
+                format_field(
+                    "E-mail",
+                    company.email,
+                )
+            )
+
+    if company.secondary_activities:
+        lines.extend(
+            [
+                "",
+                format_section("Atividades secundárias"),
+                "",
+            ]
+        )
+
+        for activity in company.secondary_activities:
+            if activity.code and activity.description:
+                lines.append(
+                    format_field(
+                        activity.code,
+                        activity.description,
+                    )
+                )
+            elif activity.description:
+                lines.append(
+                    format_paragraph(
+                        activity.description,
+                    )
+                )
 
     if company.partners:
         lines.extend(
