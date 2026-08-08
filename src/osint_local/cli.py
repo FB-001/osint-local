@@ -6,19 +6,18 @@ from typing import Annotated
 import typer
 
 from osint_local.analyzers.file_integrity import compare_files
-from osint_local.collectors.image_metadata import analyze_image
-from osint_local.presenters.hash_summary import format_hash_comparison
-from osint_local.presenters.photo_summary import format_photo_metadata
-from osint_local.version import APP_NAME, AUTHOR, DESCRIPTION, VERSION
-from osint_local.ui.console import (
-    format_field,
-    format_footer,
-    format_header,
-    format_paragraph,
-    format_section,
+from osint_local.analyzers.username_search import search_username
+from osint_local.collectors.company.brasilapi import (
+    search_company_by_cnpj,
 )
-from osint_local.ui.formatters import format_command
+from osint_local.collectors.image_metadata import analyze_image
+from osint_local.collectors.mastodon_username import (
+    search_mastodon_username,
+)
 from osint_local.errors import (
+    CompanyNetworkError,
+    CompanyNotFoundError,
+    CompanyServiceError,
     HashCalculationError,
     HashFileNotFoundError,
     HashPermissionError,
@@ -27,13 +26,29 @@ from osint_local.errors import (
     InvalidImageError,
 )
 from osint_local.errors.handlers import format_operator_error
-from osint_local.analyzers.username_search import search_username
+from osint_local.presenters.company_summary import (
+    format_company_result,
+)
+from osint_local.presenters.hash_summary import format_hash_comparison
+from osint_local.presenters.photo_summary import format_photo_metadata
 from osint_local.presenters.username_summary import (
     format_username_results,
 )
-from osint_local.collectors.mastodon_username import (
-    search_mastodon_username,
+from osint_local.ui.console import (
+    format_field,
+    format_footer,
+    format_header,
+    format_paragraph,
+    format_section,
 )
+from osint_local.ui.formatters import format_command
+from osint_local.version import (
+    APP_NAME,
+    AUTHOR,
+    DESCRIPTION,
+    VERSION,
+)
+
 
 app = typer.Typer(
     name="osint-local",
@@ -69,6 +84,10 @@ def format_main_help() -> str:
             "procurar-mastodon <usuario@instancia>",
             "Verifica uma conta Mastodon pelo identificador federado.",
         ),
+        format_command(
+            "consultar-cnpj <cnpj>",
+            "Consulta informações públicas de uma empresa pelo CNPJ.",
+        ),
     ]
 
     examples = [
@@ -77,14 +96,21 @@ def format_main_help() -> str:
             "osint-local comparar-arquivos "
             "foto_original.jpg foto_analisada.jpg"
         ),
-        "osint-local procurar-usuario <username>",
-        "osint-local procurar-mastodon <username>@mastodon.social",
+        "osint-local procurar-usuario FB-001",
+        "osint-local procurar-mastodon gargron@mastodon.social",
+        "osint-local consultar-cnpj 60701190000104",
     ]
 
     lines = [
         format_header(APP_NAME),
         "",
         format_paragraph(DESCRIPTION),
+        "",
+        format_paragraph(
+            "Desenvolvida para auxiliar o operador na coleta, "
+            "organização e correlação de informações. "
+            "O sistema não substitui o julgamento do operador."
+        ),
         "",
         format_section("Comandos disponíveis"),
         "",
@@ -104,6 +130,7 @@ def format_main_help() -> str:
 
     return "\n".join(lines)
 
+
 @app.callback(invoke_without_command=True)
 def root(
     context: typer.Context,
@@ -122,6 +149,7 @@ def root(
     if ajuda or context.invoked_subcommand is None:
         print(format_main_help())
         raise typer.Exit()
+
 
 @app.command("informacoes")
 def show_information() -> None:
@@ -144,6 +172,7 @@ def show_information() -> None:
     ]
 
     print("\n".join(lines))
+
 
 @app.command("analisar-imagem")
 def analyze_image_command(
@@ -196,6 +225,7 @@ def analyze_image_command(
         )
         raise typer.Exit(code=1)
 
+
 @app.command("comparar-arquivos")
 def compare_files_command(
     first_file: Annotated[
@@ -235,6 +265,16 @@ def compare_files_command(
         )
         raise typer.Exit(code=1)
 
+    except HashPermissionError as error:
+        print(
+            format_operator_error(
+                "Sem permissão para ler o arquivo.",
+                path=error.file_path,
+                guidance="Verifique as permissões do arquivo.",
+            )
+        )
+        raise typer.Exit(code=1)
+
     except HashCalculationError as error:
         print(
             format_operator_error(
@@ -246,6 +286,7 @@ def compare_files_command(
             )
         )
         raise typer.Exit(code=1)
+
 
 @app.command("procurar-usuario")
 def search_username_command(
@@ -264,7 +305,9 @@ def search_username_command(
         print(
             format_operator_error(
                 "O nome de usuário não pode estar vazio.",
-                guidance="Informe um identificador válido e tente novamente.",
+                guidance=(
+                    "Informe um identificador válido e tente novamente."
+                ),
             )
         )
         raise typer.Exit(code=1)
@@ -277,6 +320,7 @@ def search_username_command(
             results,
         )
     )
+
 
 @app.command("procurar-mastodon")
 def search_mastodon_command(
@@ -297,6 +341,67 @@ def search_mastodon_command(
             [result],
         )
     )
+
+
+@app.command("consultar-cnpj")
+def search_cnpj_command(
+    cnpj: Annotated[
+        str,
+        typer.Argument(
+            metavar="CNPJ",
+        ),
+    ],
+) -> None:
+    """Consulta informações públicas de uma empresa."""
+
+    try:
+        company = search_company_by_cnpj(cnpj)
+        print(format_company_result(company))
+
+    except ValueError:
+        print(
+            format_operator_error(
+                "O CNPJ informado é inválido.",
+                guidance=(
+                    "Informe um CNPJ com 14 dígitos "
+                    "e tente novamente."
+                ),
+            )
+        )
+        raise typer.Exit(code=1)
+
+    except CompanyNotFoundError:
+        print(
+            format_operator_error(
+                "O CNPJ informado não foi localizado.",
+                guidance=(
+                    "Confirme o número informado "
+                    "e tente novamente."
+                ),
+            )
+        )
+        raise typer.Exit(code=1)
+
+    except CompanyNetworkError:
+        print(
+            format_operator_error(
+                "Não foi possível acessar a fonte de consulta.",
+                guidance=(
+                    "Verifique sua conexão com a internet "
+                    "e tente novamente."
+                ),
+            )
+        )
+        raise typer.Exit(code=1)
+
+    except CompanyServiceError:
+        print(
+            format_operator_error(
+                "A fonte de consulta apresentou uma falha.",
+                guidance="Tente novamente mais tarde.",
+            )
+        )
+        raise typer.Exit(code=1)
 
 
 def main() -> None:

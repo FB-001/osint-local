@@ -9,6 +9,6 @@ AUTHOR = "FB-001"
 LICENSE = "MIT"
 
 DESCRIPTION = (
-    "Ferramenta local, modular e explicável "
-    "para apoio à análise OSINT."
+    "Ferramenta de apoio à investigação baseada exclusivamente "
+    "em fontes públicas e em consultas legalmente autorizadas."
 )

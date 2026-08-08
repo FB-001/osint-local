@@ -34,13 +34,17 @@
 
 ---
 
-## Sprint 4
+## Sprint 4 — Correlação de Dados Públicos
 
-- [ ] OCR
-- [ ] PDF
-- [ ] Documentos Office
-- [ ] ZIP
-- [ ] Hashes adicionais
+- [ ] Criar modelo de resultado de correlação
+- [ ] Consulta de CNPJ em fonte pública
+- [ ] Correlação de informações empresariais
+- [ ] Entrada por CPF quando houver fonte pública adequada
+- [ ] Entrada por nome em fontes específicas e confiáveis
+- [ ] Identificar possíveis homônimos
+- [ ] Registrar fonte e horário da consulta
+- [ ] Relatório padronizado
+- [ ] Nota de zelo com dados pessoais e LGPD
 
 ---
 

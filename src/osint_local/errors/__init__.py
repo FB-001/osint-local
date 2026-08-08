@@ -13,6 +13,12 @@ from osint_local.errors.image import (
     ImagePermissionError,
     InvalidImageError,
 )
+from .company import (
+    CompanyError,
+    CompanyNetworkError,
+    CompanyNotFoundError,
+    CompanyServiceError,
+)
 
 __all__ = [
     "OsintLocalError",
