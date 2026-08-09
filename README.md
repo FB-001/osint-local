@@ -1,44 +1,68 @@
-# OSINT Local
+# PERSPICIO
 
-> Ferramenta local, modular e explicável para apoio à análise OSINT.
+> Ferramenta local, modular e explicável para apoio à análise de informações e fontes abertas.
+
+PERSPICIO é uma ferramenta orientada ao operador, desenvolvida com foco em
+privacidade, transparência, simplicidade e utilidade operacional.
+
+O sistema auxilia na coleta, análise e organização de informações, sem
+substituir o julgamento do operador.
 
 ---
 
-## ✨ Objetivos
+## Funcionalidades atuais
 
-- 100% executável localmente
+- Análise de metadados e EXIF de imagens
+- Cálculo de SHA-256
+- Comparação de integridade de arquivos
+- Consulta pública de informações empresariais por CNPJ
+- Apresentação padronizada dos resultados no terminal
+
+---
+
+## Princípios
+
+- Funcionamento local sempre que possível
+- Privacidade
+- Simplicidade para o operador
+- Transparência sobre a origem das informações
+- Fontes públicas e legalmente acessíveis
 - Arquitetura modular
-- Código simples e explicável
-- Privacidade em primeiro lugar
-- Sem dependência de serviços externos para as funções principais
+- Ausência de telemetria
+- Código aberto
 
 ---
 
-## 🚧 Status
+## Status
 
 Em desenvolvimento.
 
----
+A versão atual utiliza interface de linha de comando (CLI).
 
-## 📦 Estrutura
-
-- Investigation
-- Target
-- Evidence
-- Presenters
-- CLI
+Consulte o arquivo `docs/ROADMAP.md` para acompanhar o planejamento do projeto.
 
 ---
 
-## 🛠 Tecnologias
+## Tecnologias
 
 - Python 3.13
 - uv
+- Typer
+- HTTPX
+- Pillow
+- Beautiful Soup
 - Git
 
 ---
 
-## 📄 Licença
+## Documentação
+
+- `docs/VISION.md` — visão, filosofia e princípios do projeto
+- `docs/ROADMAP.md` — desenvolvimento e funcionalidades planejadas
+
+---
+
+## Licença
 
 MIT
 

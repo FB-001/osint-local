@@ -1,13 +1,13 @@
 """Apresentação do resultado da comparação entre arquivos."""
 
-from osint_local.models.hash_comparison import HashComparison
-from osint_local.ui.console import (
+from perspicio.models.hash_comparison import HashComparison
+from perspicio.ui.console import (
     format_footer,
     format_header,
     format_paragraph,
     format_section,
 )
-from osint_local.ui.formatters import (
+from perspicio.ui.formatters import (
     format_success,
     format_warning,
 )

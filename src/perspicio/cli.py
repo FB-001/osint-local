@@ -1,16 +1,16 @@
-"""Interface de linha de comando do OSINT Local."""
+"""Interface de linha de comando do PERSPICIO."""
 
 from pathlib import Path
 from typing import Annotated
 
 import typer
 
-from osint_local.analyzers.file_integrity import compare_files
-from osint_local.collectors.company.brasilapi import (
+from perspicio.analyzers.file_integrity import compare_files
+from perspicio.collectors.company.brasilapi import (
     search_company_by_cnpj,
 )
-from osint_local.collectors.image.metadata import analyze_image
-from osint_local.errors import (
+from perspicio.collectors.image.metadata import analyze_image
+from perspicio.errors import (
     CompanyNetworkError,
     CompanyNotFoundError,
     CompanyServiceError,
@@ -21,21 +21,21 @@ from osint_local.errors import (
     ImagePermissionError,
     InvalidImageError,
 )
-from osint_local.errors.handlers import format_operator_error
-from osint_local.presenters.company_summary import (
+from perspicio.errors.handlers import format_operator_error
+from perspicio.presenters.company_summary import (
     format_company_result,
 )
-from osint_local.presenters.hash_summary import format_hash_comparison
-from osint_local.presenters.photo_summary import format_photo_metadata
-from osint_local.ui.console import (
+from perspicio.presenters.hash_summary import format_hash_comparison
+from perspicio.presenters.photo_summary import format_photo_metadata
+from perspicio.ui.console import (
     format_field,
     format_footer,
     format_header,
     format_paragraph,
     format_section,
 )
-from osint_local.ui.formatters import format_command
-from osint_local.version import (
+from perspicio.ui.formatters import format_command
+from perspicio.version import (
     APP_NAME,
     AUTHOR,
     DESCRIPTION,
@@ -44,7 +44,7 @@ from osint_local.version import (
 
 
 app = typer.Typer(
-    name="osint-local",
+    name="perspicio",
     add_completion=False,
     no_args_is_help=False,
     context_settings={
@@ -76,12 +76,12 @@ def format_main_help() -> str:
     ]
 
     examples = [
-        "osint-local analisar-imagem foto.jpg",
+        "perspicio analisar-imagem foto.jpg",
         (
-            "osint-local comparar-arquivos "
+            "perspicio comparar-arquivos "
             "foto_original.jpg foto_analisada.jpg"
         ),
-        "osint-local consultar-cnpj <cnpj>",
+        "perspicio consultar-cnpj <cnpj>",
     ]
 
     lines = [
@@ -105,8 +105,8 @@ def format_main_help() -> str:
         "",
         format_section("Ajuda"),
         "",
-        "osint-local --ajuda",
-        "osint-local -h",
+        "perspicio --ajuda",
+        "perspicio -h",
         "",
         format_footer(),
     ]

@@ -2,7 +2,7 @@
 
 from textwrap import wrap
 
-from osint_local.ui.theme import PRIMARY_LINE, SECONDARY_LINE, WIDTH
+from perspicio.ui.theme import PRIMARY_LINE, SECONDARY_LINE, WIDTH
 
 
 def format_header(title: str) -> str:

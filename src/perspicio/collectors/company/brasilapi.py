@@ -5,12 +5,12 @@ from time import perf_counter
 
 import httpx
 
-from osint_local.errors import (
+from perspicio.errors import (
     CompanyNetworkError,
     CompanyNotFoundError,
     CompanyServiceError,
 )
-from osint_local.models.company_result import (
+from perspicio.models.company_result import (
     CompanyPartner,
     CompanyResult,
     CompanySecondaryActivity,
@@ -22,7 +22,7 @@ BRASIL_API_CNPJ_URL = (
 
 REQUEST_HEADERS = {
     "Accept": "application/json",
-    "User-Agent": "osint-local/0.1.0",
+    "User-Agent": "perspicio/0.1.0",
 }
 
 

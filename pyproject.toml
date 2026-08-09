@@ -1,7 +1,7 @@
 [project]
-name = "osint-local"
+name = "perspicio"
 version = "0.1.0"
-description = "Ferramenta local, modular e explicável para apoio à análise OSINT"
+description = "Ferramenta local, modular e explicável para apoio à coleta e análise de informações"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
@@ -12,7 +12,7 @@ dependencies = [
 ]
 
 [project.scripts]
-osint-local = "osint_local:main"
+perspicio = "perspicio:main"
 
 [build-system]
 requires = ["uv_build>=0.12.1,<0.13.0"]

@@ -2,8 +2,8 @@
 
 from datetime import datetime
 
-from osint_local.models.company_result import CompanyResult
-from osint_local.ui.console import (
+from perspicio.models.company_result import CompanyResult
+from perspicio.ui.console import (
     format_field,
     format_footer,
     format_header,

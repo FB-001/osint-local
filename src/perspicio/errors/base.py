@@ -1,4 +1,4 @@
-"""Exceções-base do OSINT Local."""
+"""Exceções-base do PERSPICIO."""
 
 
 class OsintLocalError(Exception):

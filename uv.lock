@@ -122,7 +122,7 @@ wheels = [
 ]
 
 [[package]]
-name = "osint-local"
+name = "perspicio"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [

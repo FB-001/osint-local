@@ -1,8 +1,13 @@
-# Visão do Projeto
+# Visão do Projeto — PERSPICIO
 
 ## Missão
 
-Desenvolver uma ferramenta OSINT local, modular, transparente e orientada ao operador, priorizando privacidade, explicabilidade e confiabilidade.
+Desenvolver uma ferramenta local, modular, transparente e explicável
+para apoiar o operador na coleta, organização, verificação e análise
+de informações.
+
+O PERSPICIO deve ampliar a capacidade analítica do operador sem
+substituir seu julgamento.
 
 ---
 
@@ -10,64 +15,97 @@ Desenvolver uma ferramenta OSINT local, modular, transparente e orientada ao ope
 
 O operador é o centro do projeto.
 
-Toda decisão de desenvolvimento deve facilitar o trabalho do analista, nunca o contrário.
+Toda funcionalidade deve possuir utilidade operacional clara.
+
+O PERSPICIO não deve buscar acumular funcionalidades, mas oferecer
+ferramentas que auxiliem o operador a observar informações sob
+diferentes perspectivas, identificar elementos relevantes e estruturar
+sua análise.
 
 ---
 
 ## Objetivos
 
-- Funcionamento totalmente offline.
+- Priorizar funcionamento local sempre que possível.
+- Possibilitar operação offline nas funcionalidades que não dependam
+  de fontes externas.
 - Interface completamente em português.
 - Código interno seguindo as convenções do ecossistema Python.
 - Arquitetura modular.
 - Sem telemetria.
-- Sem coleta de dados.
-- Sem dependência obrigatória de serviços externos.
-- Fácil auditoria.
-- Fácil manutenção.
-- Código aberto.
+- Sem coleta de dados do operador.
+- Evitar dependências externas desnecessárias.
+- Utilizar fontes públicas ou consultas legalmente autorizadas.
+- Permitir identificação clara da origem das informações.
+- Facilitar auditoria e manutenção.
+- Manter o código aberto.
 
 ---
 
 ## Princípios
 
+### Operador no centro
+
+O sistema apoia a análise, mas a interpretação e a decisão permanecem
+sob responsabilidade do operador.
+
 ### Privacidade
 
-Nenhum dado do usuário deve ser enviado para terceiros.
+O PERSPICIO deve priorizar processamento local e minimizar o envio de
+informações a serviços externos.
 
 ### Transparência
 
-Toda informação apresentada deve possuir origem conhecida.
+Toda informação obtida de fonte externa deve possuir origem
+identificável.
 
 ### Explicabilidade
 
-Sempre que possível, explicar ao operador de onde veio uma informação.
+O sistema deve apresentar resultados de maneira compreensível,
+permitindo ao operador entender como uma informação foi obtida ou
+organizada.
 
 ### Integridade
 
-Toda evidência digital deve poder ser validada.
+Quando aplicável, informações e arquivos devem possuir mecanismos que
+permitam verificar sua integridade.
 
 ### Modularidade
 
-Cada módulo deve possuir apenas uma responsabilidade.
+Cada módulo deve possuir responsabilidade clara e poder evoluir sem
+comprometer desnecessariamente os demais componentes.
 
 ### Simplicidade
 
-Soluções simples são preferíveis às complexas.
+Soluções simples, compreensíveis e auditáveis são preferíveis às
+complexas.
+
+### Utilidade operacional
+
+Nenhuma funcionalidade deve existir apenas porque é tecnicamente
+possível implementá-la.
 
 ---
 
-## Público-alvo
+## Áreas de atuação
 
-- Operadores de Inteligência
-- Analistas OSINT
-- Pesquisadores
-- Profissionais de Segurança Pública
-- Militares
-- Jornalistas investigativos
+O PERSPICIO poderá apoiar diferentes etapas do trabalho analítico,
+incluindo:
+
+- coleta de informações em fontes públicas;
+- consulta de dados legalmente acessíveis;
+- análise de metadados;
+- verificação de integridade de arquivos;
+- organização e estruturação de informações;
+- aplicação de métodos estruturados de análise;
+- apoio à análise de propaganda e comunicação;
+- correlação de informações quando houver base confiável para isso.
 
 ---
 
 ## Objetivo de longo prazo
 
-Construir uma plataforma completa para coleta, organização, correlação e apresentação de evidências digitais.
+Construir uma plataforma local de apoio à análise capaz de integrar
+coleta, verificação, organização e métodos estruturados de análise em
+um ambiente único, mantendo o operador como responsável pela
+interpretação e pelas conclusões produzidas.

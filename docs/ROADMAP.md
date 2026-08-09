@@ -1,7 +1,8 @@
-# Roadmap — OSINT Local
+# Roadmap — PERSPICIO
 
-O desenvolvimento do OSINT Local prioriza utilidade operacional,
-simplicidade, funcionamento local e uso de fontes públicas confiáveis.
+O desenvolvimento do PERSPICIO prioriza utilidade operacional,
+simplicidade, processamento local sempre que possível e transparência
+sobre a origem das informações.
 
 Funcionalidades sem utilidade prática suficiente ou dependentes de
 fontes instáveis não serão mantidas apenas para ampliar o número de
@@ -31,7 +32,7 @@ recursos do sistema.
 
 ---
 
-## Sprint 3 — Coletores públicos
+## Sprint 3 — Avaliação de coletores públicos
 
 - [x] Desenvolvimento inicial de coletores por username
 - [x] Avaliação prática das fontes disponíveis
@@ -39,8 +40,11 @@ recursos do sistema.
 - [x] Remoção da busca por username após avaliação de utilidade
 
 A busca por username foi retirada porque as principais redes sociais
-não oferecem acesso público adequado para o modelo de funcionamento
-pretendido pelo OSINT Local.
+não oferecem acesso público adequado ao modelo de funcionamento
+pretendido pelo PERSPICIO.
+
+A decisão estabelece um princípio do projeto: uma funcionalidade não
+será mantida apenas porque é tecnicamente possível implementá-la.
 
 ---
 
@@ -71,53 +75,63 @@ pretendido pelo OSINT Local.
 - [x] Remoção de modelos experimentais não utilizados
 - [x] Remoção de código legado
 - [x] Simplificação da estrutura do projeto
+- [x] Adoção da identidade PERSPICIO
+- [x] Renomeação do pacote Python para `perspicio`
+- [x] Renomeação do comando principal para `perspicio`
 
 ---
 
-## Sprint 5 — Relatórios HTML offline
+## Sprint 5 — Análise estruturada de propaganda
 
-- [ ] Definir estrutura padrão do relatório HTML
-- [ ] Criar gerador HTML reutilizável
-- [ ] Exportar consulta de CNPJ para HTML
-- [ ] Exportar análise de imagem para HTML
-- [ ] Exportar comparação SHA-256 para HTML
-- [ ] Registrar data e hora da geração
-- [ ] Registrar versão do OSINT Local
-- [ ] Registrar fonte dos dados quando aplicável
-- [ ] Garantir funcionamento totalmente offline
-- [ ] Garantir que o relatório seja autossuficiente
+O Sprint 5 inicia a evolução do PERSPICIO de uma ferramenta
+predominantemente voltada à coleta e verificação para uma plataforma
+de apoio à análise.
 
-O relatório HTML deverá funcionar sem conexão com a internet e não
-depender de CSS, fontes, scripts ou outros recursos externos.
+A primeira capacidade analítica será baseada no método OCAVE.
 
-A geração nativa de PDF não faz parte da versão 1.0. Quando necessário,
-o relatório HTML poderá ser convertido para PDF pelo navegador.
+### Estrutura
+
+- [ ] Definir o modelo de uma análise OCAVE
+- [ ] Criar módulo específico para análise de propaganda
+- [ ] Separar claramente dados observados de interpretações do operador
+- [ ] Permitir preenchimento progressivo da análise
+- [ ] Padronizar a apresentação do resultado
+
+### Método OCAVE
+
+- [ ] Origem
+- [ ] Conteúdo
+- [ ] Audiência
+- [ ] Veículo
+- [ ] Efeito
+
+### Apoio ao operador
+
+- [ ] Registrar identificação ou descrição da propaganda analisada
+- [ ] Registrar observações do operador
+- [ ] Permitir campos não determinados ou inconclusivos
+- [ ] Apresentar a análise de forma estruturada
+- [ ] Evitar conclusões automáticas sem fundamento
+- [ ] Manter o julgamento analítico sob responsabilidade do operador
+
+O PERSPICIO deverá estruturar a aplicação do método sem substituir
+a interpretação humana.
 
 ---
 
-# Objetivo da versão 1.0 CLI
+# Próximas etapas
 
-A versão 1.0 deverá fornecer uma ferramenta local, simples e confiável
-para:
-
-- análise de metadados de imagens;
-- verificação e comparação de integridade por SHA-256;
-- consulta pública de informações empresariais por CNPJ;
-- apresentação padronizada dos resultados;
-- exportação de relatórios HTML offline.
-
----
-
-# Após a versão 1.0
-
-Funcionalidades futuras serão avaliadas conforme necessidade prática.
+As próximas capacidades serão desenvolvidas conforme necessidade
+operacional e maturidade da arquitetura.
 
 ## Interface gráfica
 
 - [ ] Interface gráfica para operação do sistema
 - [ ] Integração dos recursos existentes da CLI
-- [ ] Exportação de relatórios pela interface
-- [ ] Distribuição como AppImage
+- [ ] Integração das ferramentas de análise
+- [ ] Visualização estruturada dos resultados
+- [ ] Exportação de resultados quando houver necessidade operacional
+- [ ] Avaliar distribuição como AppImage
 
 ## Persistência e investigações
 
@@ -126,13 +140,22 @@ Funcionalidades futuras serão avaliadas conforme necessidade prática.
 - [ ] Registro de evidências
 - [ ] Timeline
 - [ ] Histórico de consultas
+- [ ] Histórico de análises
+
+## Métodos de análise
+
+- [ ] Avaliar outros métodos estruturados de análise
+- [ ] Desenvolver novos módulos somente quando houver utilidade
+      operacional demonstrada
+- [ ] Permitir integração entre informações coletadas e métodos
+      analíticos
 
 ## Expansões
 
 - [ ] Sistema de plugins
 - [ ] Integração opcional com IA local
 - [ ] Novos coletores públicos quando houver fontes adequadas
-- [ ] Correlação de dados
+- [ ] Correlação de dados quando houver base confiável
 - [ ] API local
 
 ## Auditoria e operação em equipe
@@ -148,13 +171,16 @@ Funcionalidades futuras serão avaliadas conforme necessidade prática.
 
 # Princípios do projeto
 
-O OSINT Local deverá priorizar:
+O PERSPICIO deverá priorizar:
 
-1. funcionamento local sempre que possível;
-2. privacidade;
-3. simplicidade para o operador;
-4. fontes públicas e legalmente acessíveis;
-5. transparência sobre a origem das informações;
-6. modularidade;
-7. ausência de dependências desnecessárias;
-8. utilidade operacional acima da quantidade de funcionalidades.
+1. operador no centro do processo;
+2. funcionamento local sempre que possível;
+3. privacidade;
+4. simplicidade;
+5. fontes públicas e legalmente acessíveis;
+6. transparência sobre a origem das informações;
+7. separação entre fato observado e interpretação;
+8. explicabilidade;
+9. modularidade;
+10. ausência de dependências desnecessárias;
+11. utilidade operacional acima da quantidade de funcionalidades.

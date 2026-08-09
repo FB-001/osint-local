@@ -1,6 +1,6 @@
 """Formatadores de mensagens da interface do operador."""
 
-from osint_local.ui.icons import COMMAND, ERROR, SUCCESS, WARNING
+from perspicio.ui.icons import COMMAND, ERROR, SUCCESS, WARNING
 
 
 def format_command(

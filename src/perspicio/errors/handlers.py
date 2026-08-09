@@ -2,12 +2,12 @@
 
 from pathlib import Path
 
-from osint_local.ui.console import (
+from perspicio.ui.console import (
     format_footer,
     format_header,
     format_paragraph,
 )
-from osint_local.ui.formatters import format_error
+from perspicio.ui.formatters import format_error
 
 
 def format_operator_error(

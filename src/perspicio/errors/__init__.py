@@ -1,13 +1,13 @@
-"""Exceções públicas do OSINT Local."""
+"""Exceções públicas do PERSPICIO."""
 
-from osint_local.errors.base import OsintLocalError
-from osint_local.errors.hash import (
+from perspicio.errors.base import OsintLocalError
+from perspicio.errors.hash import (
     HashAnalysisError,
     HashCalculationError,
     HashFileNotFoundError,
     HashPermissionError,
 )
-from osint_local.errors.image import (
+from perspicio.errors.image import (
     ImageAnalysisError,
     ImageFileNotFoundError,
     ImagePermissionError,

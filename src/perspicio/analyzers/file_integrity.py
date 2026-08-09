@@ -2,13 +2,13 @@
 
 from pathlib import Path
 
-from osint_local.collectors.image.metadata import calculate_sha256
-from osint_local.errors import (
+from perspicio.collectors.image.metadata import calculate_sha256
+from perspicio.errors import (
     HashCalculationError,
     HashFileNotFoundError,
     HashPermissionError,
 )
-from osint_local.models.hash_comparison import HashComparison
+from perspicio.models.hash_comparison import HashComparison
 
 
 def calculate_file_hash(file_path: Path) -> str:

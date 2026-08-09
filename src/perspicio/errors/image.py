@@ -2,7 +2,7 @@
 
 from pathlib import Path
 
-from osint_local.errors.base import OsintLocalError
+from perspicio.errors.base import OsintLocalError
 
 
 class ImageAnalysisError(OsintLocalError):

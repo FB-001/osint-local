@@ -7,8 +7,8 @@ from typing import Any
 
 from PIL import ExifTags, Image, UnidentifiedImageError
 
-from osint_local.models.photo_metadata import PhotoMetadata
-from osint_local.errors import (
+from perspicio.models.photo_metadata import PhotoMetadata
+from perspicio.errors import (
     ImageFileNotFoundError,
     ImagePermissionError,
     InvalidImageError,

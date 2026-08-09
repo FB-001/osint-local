@@ -1,7 +1,7 @@
 """Apresentação legível dos metadados de uma imagem."""
 
-from osint_local.models.photo_metadata import PhotoMetadata
-from osint_local.ui.console import (
+from perspicio.models.photo_metadata import PhotoMetadata
+from perspicio.ui.console import (
     format_field,
     format_footer,
     format_header,

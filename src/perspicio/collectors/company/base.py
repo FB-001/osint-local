@@ -2,7 +2,7 @@
 
 from abc import ABC, abstractmethod
 
-from osint_local.models.company import Company
+from perspicio.models.company import Company
 
 
 class CompanyCollector(ABC):
