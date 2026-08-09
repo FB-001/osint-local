@@ -1,6 +1,9 @@
 """Apresentação de análises estruturadas de propaganda."""
 
 from perspicio.analysis.propaganda.analysis import PropagandaAnalysis
+from perspicio.analysis.propaganda.vision.colors import summarize_colors
+from perspicio.analysis.propaganda.vision.labels import translate_yolo_label
+from perspicio.analysis.propaganda.vision.detections import DetectionStatus
 from perspicio.ui.console import (
     format_field,
     format_footer,
@@ -27,8 +30,61 @@ def _value_or_not_informed(value: str | None) -> str:
     return value
 
 
-def format_propaganda_analysis(analysis: PropagandaAnalysis) -> str:
+def format_propaganda_analysis(
+    analysis: PropagandaAnalysis,
+) -> str:
     """Formata uma análise estruturada de propaganda."""
+
+    observed_texts = (
+        analysis.observed.texts
+        if analysis.observed.texts
+        else ["Nenhum texto identificado"]
+    )
+
+    visual_elements = []
+
+    if analysis.observed.visual_elements:
+        for element in analysis.observed.visual_elements:
+            if element.status == DetectionStatus.REJECTED:
+                continue
+
+            label = translate_yolo_label(element.label)
+
+            if element.status == DetectionStatus.VALIDATED:
+                status = "[validado]"
+            else:
+                status = "[não revisado]"
+
+            visual_elements.append(
+                f"{label} — "
+                f"{element.confidence * 100:.2f}% "
+                f"{status}"
+            )
+
+        if not visual_elements:
+            visual_elements.append(
+                "Nenhum elemento visual validado"
+            )
+    else:
+        visual_elements.append(
+            "Nenhum elemento visual identificado"
+        )
+
+    color_summary = summarize_colors(
+        analysis.observed.colors
+    )
+
+    colors = []
+
+    if color_summary:
+        for name, proportion in color_summary.items():
+            colors.append(
+                f"{name} — {proportion:.2f}%"
+            )
+    else:
+        colors.append(
+            "Nenhuma cor predominante identificada"
+        )
 
     lines = [
         format_header("ANÁLISE DE PROPAGANDA"),
@@ -40,93 +96,145 @@ def format_propaganda_analysis(analysis: PropagandaAnalysis) -> str:
             analysis.identification,
         ),
         "",
+        format_section("Dados observados"),
+        "",
+        format_section("Textos identificados"),
+        "",
+        *observed_texts,
+        "",
+        format_section("Elementos visuais detectados"),
+        "",
+        *visual_elements,
+        "",
+        format_section("Cores predominantes"),
+        "",
+        *colors,
+        "",
         format_section("Caracterização"),
         "",
         format_field(
             "Tipo",
-            _value_or_undetermined(analysis.propaganda_type),
+            _value_or_undetermined(
+                analysis.propaganda_type
+            ),
         ),
         format_field(
             "Classificação",
-            _value_or_undetermined(analysis.classification),
+            _value_or_undetermined(
+                analysis.classification
+            ),
         ),
         "",
         format_section("Princípios"),
         "",
         format_field(
             "Credibilidade",
-            _value_or_undetermined(analysis.credibility),
+            _value_or_undetermined(
+                analysis.credibility
+            ),
         ),
         format_field(
             "Coerência",
-            _value_or_undetermined(analysis.coherence),
+            _value_or_undetermined(
+                analysis.coherence
+            ),
         ),
         format_field(
             "Significância",
-            _value_or_undetermined(analysis.significance),
+            _value_or_undetermined(
+                analysis.significance
+            ),
         ),
         format_field(
             "Positividade",
-            _value_or_undetermined(analysis.positivity),
+            _value_or_undetermined(
+                analysis.positivity
+            ),
         ),
         format_field(
             "Permanência",
-            _value_or_undetermined(analysis.permanence),
+            _value_or_undetermined(
+                analysis.permanence
+            ),
         ),
         format_field(
             "Adequabilidade",
-            _value_or_undetermined(analysis.adequacy),
+            _value_or_undetermined(
+                analysis.adequacy
+            ),
         ),
         format_field(
             "Oportunidade",
-            _value_or_undetermined(analysis.opportunity),
+            _value_or_undetermined(
+                analysis.opportunity
+            ),
         ),
         "",
         format_section("Elementos essenciais"),
         "",
         format_field(
             "Ideia-força",
-            _value_or_undetermined(analysis.force_idea),
+            _value_or_undetermined(
+                analysis.force_idea
+            ),
         ),
         format_field(
             "Tema",
-            _value_or_undetermined(analysis.theme),
+            _value_or_undetermined(
+                analysis.theme
+            ),
         ),
         format_field(
             "Frase-síntese",
-            _value_or_undetermined(analysis.slogan),
+            _value_or_undetermined(
+                analysis.slogan
+            ),
         ),
         format_field(
             "Símbolo",
-            _value_or_undetermined(analysis.symbol),
+            _value_or_undetermined(
+                analysis.symbol
+            ),
         ),
         "",
         format_section("OCAVE"),
         "",
         format_field(
             "Origem",
-            _value_or_undetermined(analysis.ocave.origin),
+            _value_or_undetermined(
+                analysis.ocave.origin
+            ),
         ),
         format_field(
             "Conteúdo",
-            _value_or_undetermined(analysis.ocave.content),
+            _value_or_undetermined(
+                analysis.ocave.content
+            ),
         ),
         format_field(
             "Audiência-alvo",
-            _value_or_undetermined(analysis.ocave.target_audience),
+            _value_or_undetermined(
+                analysis.ocave.target_audience
+            ),
         ),
         format_field(
             "Veículo de difusão",
-            _value_or_undetermined(analysis.ocave.vehicle),
+            _value_or_undetermined(
+                analysis.ocave.vehicle
+            ),
         ),
         format_field(
             "Efeito",
-            _value_or_undetermined(analysis.ocave.effect),
+            _value_or_undetermined(
+                analysis.ocave.effect
+            ),
         ),
         "",
         format_section("Observações do operador"),
         "",
-        _value_or_not_informed(analysis.observations),
+        _value_or_not_informed(
+            analysis.observations
+        ),
         "",
         format_footer(),
     ]

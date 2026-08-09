@@ -41,6 +41,12 @@ from perspicio.version import (
     DESCRIPTION,
     VERSION,
 )
+from perspicio.analysis.propaganda.analyzer import analyze_propaganda
+from perspicio.presenters.propaganda_summary import format_propaganda_analysis
+from perspicio.analysis.propaganda.review import (
+    review_ocr_texts,
+    review_visual_elements,
+)
 
 
 app = typer.Typer(
@@ -72,6 +78,10 @@ def format_main_help() -> str:
         format_command(
             "consultar-cnpj <cnpj>",
             "Consulta informações públicas de uma empresa pelo CNPJ.",
+        ),
+        format_command(
+            "analisar-propaganda <arquivo>",
+            "Analisa uma peça de propaganda e apoia a aplicação do método OCAVE.",
         ),
     ]
 
@@ -298,6 +308,57 @@ def search_cnpj_command(
             format_operator_error(
                 "A fonte de consulta apresentou uma falha.",
                 guidance="Tente novamente mais tarde.",
+            )
+        )
+        raise typer.Exit(code=1)
+
+@app.command("analisar-propaganda")
+def analyze_propaganda_command(
+    file_path: Annotated[
+        Path,
+        typer.Argument(
+            exists=False,
+            file_okay=True,
+            dir_okay=False,
+            readable=False,
+            metavar="ARQUIVO",
+        ),
+    ],
+) -> None:
+    """Analisa uma peça de propaganda."""
+
+    try:
+        analysis = analyze_propaganda(file_path)
+
+        analysis.observed.texts = review_ocr_texts(
+            analysis.observed.ocr_texts
+        )
+
+        review_visual_elements(
+            analysis.observed.visual_elements
+        )
+
+        print(format_propaganda_analysis(analysis))
+
+    except FileNotFoundError:
+        print(
+            format_operator_error(
+                "Arquivo de propaganda não encontrado.",
+                path=file_path,
+                guidance="Verifique o caminho e tente novamente.",
+            )
+        )
+        raise typer.Exit(code=1)
+
+    except ValueError as error:
+        print(
+            format_operator_error(
+                str(error),
+                path=file_path,
+                guidance=(
+                    "Utilize uma imagem válida nos formatos "
+                    "JPEG, PNG ou WEBP."
+                ),
             )
         )
         raise typer.Exit(code=1)

@@ -1,7 +1,106 @@
 """Revisão e validação de sugestões de análise de propaganda."""
 
+import typer
+
 from perspicio.analysis.propaganda.analysis import PropagandaAnalysis
+from perspicio.analysis.propaganda.ocr import (
+    OcrText,
+    OcrTextStatus,
+)
+from perspicio.analysis.propaganda.vision.detections import (
+    DetectionStatus,
+    VisualDetection,
+)
 from perspicio.analysis.propaganda.vision.draft import PropagandaAnalysisDraft
+from perspicio.analysis.propaganda.vision.labels import translate_yolo_label
+
+
+def review_ocr_texts(
+    texts: list[OcrText],
+) -> list[str]:
+    """Solicita ao operador a revisão dos textos identificados pelo OCR."""
+
+    if not texts:
+        return []
+
+    print()
+    print("REVISÃO DOS TEXTOS IDENTIFICADOS")
+    print()
+
+    final_texts = []
+
+    for item in texts:
+        print(
+            f'Texto: "{item.text}" '
+            f"({item.confidence:.2f}%)"
+        )
+
+        while True:
+            action = typer.prompt(
+                "[A] Aceitar  [C] Corrigir  [R] Rejeitar",
+                default="A",
+            ).strip().lower()
+
+            if action == "a":
+                item.status = OcrTextStatus.VALIDATED
+                final_texts.append(item.text)
+                break
+
+            if action == "c":
+                corrected = typer.prompt(
+                    "Texto correto"
+                ).strip()
+
+                if not corrected:
+                    print(
+                        "O texto corrigido não pode ficar vazio."
+                    )
+                    continue
+
+                item.corrected_text = corrected
+                item.status = OcrTextStatus.CORRECTED
+                final_texts.append(item.final_text)
+                break
+
+            if action == "r":
+                item.status = OcrTextStatus.REJECTED
+                break
+
+            print(
+                "Opção inválida. Informe A, C ou R."
+            )
+
+        print()
+
+    return final_texts
+
+
+def review_visual_elements(
+    detections: list[VisualDetection],
+) -> None:
+    """Solicita ao operador a validação das detecções visuais."""
+
+    if not detections:
+        return
+
+    print()
+    print("REVISÃO DOS ELEMENTOS VISUAIS")
+    print()
+
+    for detection in detections:
+        label = translate_yolo_label(detection.label)
+        confidence = detection.confidence * 100
+
+        confirmed = typer.confirm(
+            f'Confirmar "{label}" ({confidence:.2f}%)?',
+            default=True,
+        )
+
+        detection.status = (
+            DetectionStatus.VALIDATED
+            if confirmed
+            else DetectionStatus.REJECTED
+        )
 
 
 def apply_validated_draft(

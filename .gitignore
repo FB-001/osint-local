@@ -17,3 +17,7 @@ data/private/
 
 # Local test files and potentially sensitive evidence
 examples/images/
+
+# YOLO generated files and local models
+runs/
+*.pt

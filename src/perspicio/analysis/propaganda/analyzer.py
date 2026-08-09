@@ -8,7 +8,7 @@ from perspicio.analysis.propaganda.analysis import PropagandaAnalysis
 from perspicio.analysis.propaganda.observations import PropagandaObservations
 from perspicio.analysis.propaganda.ocr import (
     extract_text_with_confidence,
-    filter_ocr_by_confidence,
+    select_ocr_by_confidence,
 )
 from perspicio.analysis.propaganda.vision.colors import extract_dominant_colors
 from perspicio.analysis.propaganda.vision.yolo import detect_visual_elements
@@ -54,7 +54,12 @@ def analyze_propaganda(file_path: Path) -> PropagandaAnalysis:
         for result in ocr_results
     ]
 
-    texts = filter_ocr_by_confidence(ocr_results)
+    ocr_texts = select_ocr_by_confidence(ocr_results)
+
+    texts = [
+        result.final_text
+        for result in ocr_texts
+    ]
 
     colors = extract_dominant_colors(file_path)
 
@@ -64,6 +69,7 @@ def analyze_propaganda(file_path: Path) -> PropagandaAnalysis:
         identification=file_path.name,
         observed=PropagandaObservations(
             raw_texts=raw_texts,
+            ocr_texts=ocr_texts,
             texts=texts,
             colors=colors,
             visual_elements=visual_elements,

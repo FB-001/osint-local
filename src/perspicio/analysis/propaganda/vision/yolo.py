@@ -4,7 +4,10 @@ from pathlib import Path
 
 from ultralytics import YOLO
 
-from perspicio.analysis.propaganda.vision.detections import VisualDetection
+from perspicio.analysis.propaganda.vision.detections import (
+    DetectionStatus,
+    VisualDetection,
+)
 
 
 def detect_visual_elements(
@@ -37,7 +40,7 @@ def detect_visual_elements(
                 VisualDetection(
                     label=label,
                     confidence=confidence,
-                    validated=False,
+                    status=DetectionStatus.PENDING,
                 )
             )
 

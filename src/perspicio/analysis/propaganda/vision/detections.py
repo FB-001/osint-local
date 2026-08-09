@@ -1,6 +1,15 @@
 """Estruturas para detecções visuais automáticas."""
 
 from dataclasses import dataclass
+from enum import Enum
+
+
+class DetectionStatus(str, Enum):
+    """Estados possíveis de uma detecção visual."""
+
+    PENDING = "pending"
+    VALIDATED = "validated"
+    REJECTED = "rejected"
 
 
 @dataclass
@@ -9,4 +18,4 @@ class VisualDetection:
 
     label: str
     confidence: float
-    validated: bool = False
+    status: DetectionStatus = DetectionStatus.PENDING
