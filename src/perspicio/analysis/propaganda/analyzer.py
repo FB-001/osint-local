@@ -5,6 +5,11 @@ from pathlib import Path
 from PIL import Image, UnidentifiedImageError
 
 from perspicio.analysis.propaganda.analysis import PropagandaAnalysis
+from perspicio.analysis.propaganda.observations import PropagandaObservations
+from perspicio.analysis.propaganda.ocr import (
+    extract_text_with_confidence,
+    filter_ocr_by_confidence,
+)
 
 
 SUPPORTED_IMAGE_FORMATS = {
@@ -40,6 +45,19 @@ def analyze_propaganda(file_path: Path) -> PropagandaAnalysis:
             "O arquivo informado não contém uma imagem válida."
         ) from error
 
+    ocr_results = extract_text_with_confidence(file_path)
+
+    raw_texts = [
+        result.text
+        for result in ocr_results
+    ]
+
+    texts = filter_ocr_by_confidence(ocr_results)
+
     return PropagandaAnalysis(
         identification=file_path.name,
+        observed=PropagandaObservations(
+            raw_texts=raw_texts,
+            texts=texts,
+        ),
     )
