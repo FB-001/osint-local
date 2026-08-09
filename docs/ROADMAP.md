@@ -81,41 +81,27 @@ será mantida apenas porque é tecnicamente possível implementá-la.
 
 ---
 
-## Sprint 5 — Análise estruturada de propaganda
+## Sprint 5 — Análise de Propaganda Adversa — OCAVE
 
-O Sprint 5 inicia a evolução do PERSPICIO de uma ferramenta
-predominantemente voltada à coleta e verificação para uma plataforma
-de apoio à análise.
+- [ ] Criar estrutura do módulo de análise de propaganda
+- [ ] Criar modelo de análise OCAVE
+- [ ] Origem — Quem?
+- [ ] Conteúdo — O quê?
+- [ ] Audiência-alvo — Para quem?
+- [ ] Veículo de Difusão — Como?
+- [ ] Efeito — Para quê?
+- [ ] Permitir quesitos ainda não determinados
+- [ ] Registrar observações do analista
+- [ ] Criar apresentação padronizada da análise
+- [ ] Integrar o comando à CLI
+- [ ] Testar uma análise OCAVE completa
 
-A primeira capacidade analítica será baseada no método OCAVE.
+A análise OCAVE deverá apoiar o raciocínio do operador sem forçar
+conclusões quando os dados disponíveis forem insuficientes.
 
-### Estrutura
-
-- [ ] Definir o modelo de uma análise OCAVE
-- [ ] Criar módulo específico para análise de propaganda
-- [ ] Separar claramente dados observados de interpretações do operador
-- [ ] Permitir preenchimento progressivo da análise
-- [ ] Padronizar a apresentação do resultado
-
-### Método OCAVE
-
-- [ ] Origem
-- [ ] Conteúdo
-- [ ] Audiência
-- [ ] Veículo
-- [ ] Efeito
-
-### Apoio ao operador
-
-- [ ] Registrar identificação ou descrição da propaganda analisada
-- [ ] Registrar observações do operador
-- [ ] Permitir campos não determinados ou inconclusivos
-- [ ] Apresentar a análise de forma estruturada
-- [ ] Evitar conclusões automáticas sem fundamento
-- [ ] Manter o julgamento analítico sob responsabilidade do operador
-
-O PERSPICIO deverá estruturar a aplicação do método sem substituir
-a interpretação humana.
+O PERSPICIO organiza e apresenta os elementos da análise.
+A interpretação e as conclusões permanecem sob responsabilidade
+do operador.
 
 ---
 
