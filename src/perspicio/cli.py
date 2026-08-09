@@ -54,7 +54,7 @@ app = typer.Typer(
 
 
 def format_main_help() -> str:
-    """Retorna a ajuda principal em português."""
+    """Retorna a tela principal do PERSPICIO."""
 
     commands = [
         format_command(
@@ -75,15 +75,6 @@ def format_main_help() -> str:
         ),
     ]
 
-    examples = [
-        "perspicio analisar-imagem foto.jpg",
-        (
-            "perspicio comparar-arquivos "
-            "foto_original.jpg foto_analisada.jpg"
-        ),
-        "perspicio consultar-cnpj <cnpj>",
-    ]
-
     lines = [
         format_header(APP_NAME),
         "",
@@ -91,22 +82,13 @@ def format_main_help() -> str:
         "",
         format_paragraph(
             "Desenvolvida para auxiliar o operador na coleta, "
-            "organização e correlação de informações. "
+            "organização e análise de informações. "
             "O sistema não substitui o julgamento do operador."
         ),
         "",
         format_section("Comandos disponíveis"),
         "",
         "\n\n".join(commands),
-        "",
-        format_section("Exemplos"),
-        "",
-        "\n\n".join(examples),
-        "",
-        format_section("Ajuda"),
-        "",
-        "perspicio --ajuda",
-        "perspicio -h",
         "",
         format_footer(),
     ]
@@ -117,22 +99,12 @@ def format_main_help() -> str:
 @app.callback(invoke_without_command=True)
 def root(
     context: typer.Context,
-    ajuda: Annotated[
-        bool,
-        typer.Option(
-            "--ajuda",
-            "-h",
-            help="Exibe a ajuda principal e encerra.",
-            is_eager=True,
-        ),
-    ] = False,
 ) -> None:
     """Controla a entrada principal da aplicação."""
 
-    if ajuda or context.invoked_subcommand is None:
+    if context.invoked_subcommand is None:
         print(format_main_help())
         raise typer.Exit()
-
 
 @app.command("informacoes")
 def show_information() -> None:
