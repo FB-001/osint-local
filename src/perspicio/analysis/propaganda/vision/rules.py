@@ -1,6 +1,7 @@
 """Regras simples para geração de sugestões de análise."""
 
 from perspicio.analysis.propaganda.observations import PropagandaObservations
+from perspicio.analysis.propaganda.ocr import OcrTextStatus
 from perspicio.analysis.propaganda.vision.base import AnalysisSuggestion
 from perspicio.analysis.propaganda.vision.draft import PropagandaAnalysisDraft
 
@@ -12,15 +13,24 @@ def generate_suggestions(
 
     draft = PropagandaAnalysisDraft()
 
-    if observed.texts:
-        candidate = " ".join(observed.texts)
+    validated_texts = [
+        item.final_text
+        for item in observed.ocr_texts
+        if item.status in {
+            OcrTextStatus.VALIDATED,
+            OcrTextStatus.CORRECTED,
+        }
+    ]
 
-        draft.content = AnalysisSuggestion(
+    if validated_texts:
+        candidate = " ".join(validated_texts)
+
+        draft.slogan = AnalysisSuggestion(
             value=candidate,
-            confidence=0.60,
+            confidence=0.90,
             rationale=(
-                "Texto identificado pelo OCR com confiança mínima "
-                "suficiente para análise preliminar."
+                "Frase textual de destaque identificada automaticamente "
+                "e posteriormente validada pelo operador."
             ),
             validated=False,
         )

@@ -13,6 +13,7 @@ from perspicio.analysis.propaganda.vision.detections import (
 )
 from perspicio.analysis.propaganda.vision.draft import PropagandaAnalysisDraft
 from perspicio.analysis.propaganda.vision.labels import translate_yolo_label
+from perspicio.analysis.propaganda.vision.base import AnalysisSuggestion
 
 
 def review_ocr_texts(
@@ -164,3 +165,60 @@ def apply_validated_draft(
         analysis.ocave.effect = draft.effect.value
 
     return analysis
+
+def review_analysis_suggestion(
+    field_name: str,
+    suggestion: AnalysisSuggestion | None,
+) -> str | None:
+    """Permite ao operador aceitar, corrigir ou rejeitar uma sugestão."""
+
+    if suggestion is None:
+        return None
+
+    print()
+    print(field_name.upper())
+    print()
+
+    print(f"Sugestão: {suggestion.value}")
+
+    if suggestion.confidence is not None:
+        print(
+            f"Confiança: "
+            f"{suggestion.confidence * 100:.2f}%"
+        )
+
+    if suggestion.rationale:
+        print(f"Fundamento: {suggestion.rationale}")
+
+    print()
+
+    while True:
+        action = typer.prompt(
+            "[A] Aceitar  [C] Corrigir  [R] Rejeitar",
+            default="A",
+        ).strip().lower()
+
+        if action == "a":
+            suggestion.validated = True
+            return suggestion.value
+
+        if action == "c":
+            corrected = typer.prompt(
+                "Valor correto"
+            ).strip()
+
+            if not corrected:
+                print(
+                    "O valor corrigido não pode ficar vazio."
+                )
+                continue
+
+            suggestion.value = corrected
+            suggestion.validated = True
+            return corrected
+
+        if action == "r":
+            suggestion.validated = False
+            return None
+
+        print("Opção inválida. Informe A, C ou R.")

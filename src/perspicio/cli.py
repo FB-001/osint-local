@@ -44,9 +44,12 @@ from perspicio.version import (
 from perspicio.analysis.propaganda.analyzer import analyze_propaganda
 from perspicio.presenters.propaganda_summary import format_propaganda_analysis
 from perspicio.analysis.propaganda.review import (
+    apply_validated_draft,
+    review_analysis_suggestion,
     review_ocr_texts,
     review_visual_elements,
 )
+from perspicio.analysis.propaganda.vision.rules import generate_suggestions
 
 
 app = typer.Typer(
@@ -336,6 +339,20 @@ def analyze_propaganda_command(
 
         review_visual_elements(
             analysis.observed.visual_elements
+        )
+
+        draft = generate_suggestions(
+            analysis.observed
+        )
+
+        review_analysis_suggestion(
+            "Frase-síntese",
+            draft.slogan,
+        )
+
+        analysis = apply_validated_draft(
+            analysis,
+            draft,
         )
 
         print(format_propaganda_analysis(analysis))
