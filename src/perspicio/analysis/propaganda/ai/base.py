@@ -1,17 +1,17 @@
-"""Contrato-base para análise de propaganda assistida por IA."""
+"""Interface-base para provedores de IA na análise de propaganda."""
 
 from abc import ABC, abstractmethod
 
 from perspicio.analysis.propaganda.ai.context import PropagandaAIContext
-from perspicio.analysis.propaganda.vision.draft import PropagandaAnalysisDraft
+from perspicio.analysis.propaganda.ai.result import PropagandaAIResult
 
 
 class PropagandaAI(ABC):
-    """Define o contrato para mecanismos de análise assistida por IA."""
+    """Define o contrato para uma IA de análise de propaganda."""
 
     @abstractmethod
     def analyze(
         self,
         context: PropagandaAIContext,
-    ) -> PropagandaAnalysisDraft:
-        """Gera sugestões analíticas a partir de dados validados."""
+    ) -> PropagandaAIResult:
+        """Analisa o contexto e retorna sugestões estruturadas."""
