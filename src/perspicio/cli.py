@@ -41,8 +41,11 @@ from perspicio.version import (
     DESCRIPTION,
     VERSION,
 )
+
+from perspicio.analysis.propaganda.ai.adapter import ai_result_to_draft
+from perspicio.analysis.propaganda.ai.context import build_ai_context
+from perspicio.analysis.propaganda.ai.mock import MockPropagandaAI
 from perspicio.analysis.propaganda.analyzer import analyze_propaganda
-from perspicio.presenters.propaganda_summary import format_propaganda_analysis
 from perspicio.analysis.propaganda.review import (
     apply_validated_draft,
     review_analysis_suggestion,
@@ -50,6 +53,9 @@ from perspicio.analysis.propaganda.review import (
     review_visual_elements,
 )
 from perspicio.analysis.propaganda.vision.rules import generate_suggestions
+from perspicio.presenters.propaganda_summary import (
+    format_propaganda_analysis,
+)
 
 
 app = typer.Typer(
@@ -118,6 +124,7 @@ def root(
     if context.invoked_subcommand is None:
         print(format_main_help())
         raise typer.Exit()
+
 
 @app.command("informacoes")
 def show_information() -> None:
@@ -255,6 +262,7 @@ def compare_files_command(
         )
         raise typer.Exit(code=1)
 
+
 @app.command("consultar-cnpj")
 def search_cnpj_command(
     cnpj: Annotated[
@@ -315,6 +323,7 @@ def search_cnpj_command(
         )
         raise typer.Exit(code=1)
 
+
 @app.command("analisar-propaganda")
 def analyze_propaganda_command(
     file_path: Annotated[
@@ -353,6 +362,30 @@ def analyze_propaganda_command(
         analysis = apply_validated_draft(
             analysis,
             draft,
+        )
+
+        ai_context = build_ai_context(
+            analysis
+        )
+
+        ai = MockPropagandaAI()
+
+        ai_result = ai.analyze(
+            ai_context
+        )
+
+        ai_draft = ai_result_to_draft(
+            ai_result
+        )
+
+        review_analysis_suggestion(
+            "Ideia-força",
+            ai_draft.force_idea,
+        )
+
+        analysis = apply_validated_draft(
+            analysis,
+            ai_draft,
         )
 
         print(format_propaganda_analysis(analysis))
