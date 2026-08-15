@@ -98,7 +98,6 @@ incluindo:
 - verificação de integridade de arquivos;
 - organização e estruturação de informações;
 - aplicação de métodos estruturados de análise;
-- apoio à análise de propaganda e comunicação;
 - correlação de informações quando houver base confiável para isso.
 
 ---

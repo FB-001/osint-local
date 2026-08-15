@@ -9,7 +9,6 @@ dependencies = [
     "httpx>=0.28.1",
     "pillow>=12.3.0",
     "typer>=0.27.1",
-    "ultralytics>=8.4.116",
 ]
 
 [project.scripts]

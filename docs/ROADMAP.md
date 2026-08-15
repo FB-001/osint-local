@@ -81,29 +81,6 @@ será mantida apenas porque é tecnicamente possível implementá-la.
 
 ---
 
-## Sprint 5 — Análise de Propaganda Adversa — OCAVE
-
-- [ ] Criar estrutura do módulo de análise de propaganda
-- [ ] Criar modelo de análise OCAVE
-- [ ] Origem — Quem?
-- [ ] Conteúdo — O quê?
-- [ ] Audiência-alvo — Para quem?
-- [ ] Veículo de Difusão — Como?
-- [ ] Efeito — Para quê?
-- [ ] Permitir quesitos ainda não determinados
-- [ ] Registrar observações do analista
-- [ ] Criar apresentação padronizada da análise
-- [ ] Integrar o comando à CLI
-- [ ] Testar uma análise OCAVE completa
-
-A análise OCAVE deverá apoiar o raciocínio do operador sem forçar
-conclusões quando os dados disponíveis forem insuficientes.
-
-O PERSPICIO organiza e apresenta os elementos da análise.
-A interpretação e as conclusões permanecem sob responsabilidade
-do operador.
-
----
 
 # Próximas etapas
 
